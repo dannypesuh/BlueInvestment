@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Investment Website</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav>
+  <div class="logo">Blue Investment</div>
+  <ul class="nav-links">
+    <li><a href="#">Home</a></li>
+    <li><a href="#">Deposit</a></li>
+    <li><a href="#">Logout</a></li>
+  </ul>
+</nav>
+
+<div class="dashboard-container">
+  <section class="balance-section">
+    <h1>Welcome, [Username]</h1>
+    <p>Balance: ₦<span id="balance">0.00</span></p>
+    <button id="deposit-button">Deposit Funds</button>
+    <div id="success-message" style="display:none;">Deposit Successful!</div>
+  </section>
+
+  <section id="deposit-form" style="display: none; margin-top: 20px;">
+    <h3>Deposit Funds</h3>
+    <form>
+      <label for="amount">Amount (₦):</label><br>
+      <input type="number" id="amount" name="amount" required><br><br>
+      <button type="submit">Submit Deposit</button>
+    </form>
+  </section>
+
+  <section class="transactions-section">
+    <h2>Recent Transactions</h2>
+    <ul id="transactions-list">
+      <li>No transactions yet.</li>
+    </ul>
+  </section>
+</div>
+
+<script>
+  const depositButton = document.getElementById('deposit-button');
+  const depositForm = document.getElementById('deposit-form');
+  const form = depositForm.querySelector('form');
+  const balanceDisplay = document.getElementById('balance');
+  const transactionsList = document.getElementById('transactions-list');
+  const successMessage = document.getElementById('success-message');
+
+  let currentBalance = 0.00;
+
+  depositButton.addEventListener('click', () => {
+    depositForm.style.display = depositForm.style.display === "none" ? "block" : "none";
+  });
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+    const amountInput = document.getElementById('amount');
+    const depositAmount = parseFloat(amountInput.value);
+
+    if (!isNaN(depositAmount) && depositAmount > 0) {
+      currentBalance += depositAmount;
+      balanceDisplay.textContent = currentBalance.toFixed(2);
+
+      const transactionItem = document.createElement('li');
+      transactionItem.textContent = `Deposited: ₦${depositAmount.toFixed(2)}`;
+      transactionsList.prepend(transactionItem);
+
+      amountInput.value = "";
+      depositForm.style.display = "none";
+
+      // Show success message
+      successMessage.style.display = "block";
+      setTimeout(() => {
+        successMessage.style.display = "none";
+      }, 3000); // Hide after 3 seconds
+    } else {
+      alert('Please enter a valid amount.');
+    }
+  });
+</script>
+
+</body>
+</html>
